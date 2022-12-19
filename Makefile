@@ -31,4 +31,13 @@ ifndef LIPO
 	$(warning "install apple developer tools in order to build an universal binary")
 else
 	lipo -create -output timemachine_exporter timemachine_exporter-darwin-amd64 timemachine_exporter-darwin-arm64
+	chmod +x timemachine_exporter
 endif
+
+clean:
+	rm -rf timemachine_exporter timemachine_exporter-* dist
+
+dist: timemachine_exporter
+	mkdir -p dist
+	cp timemachine_exporter dist/
+	(cd dist && shasum -a 256 timemachine_exporter > sha256sums.txt)
