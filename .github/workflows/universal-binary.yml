@@ -1,0 +1,19 @@
+---
+name: Build macOS Universal Binary
+on: [push, create]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: make all
+
+      - name: Archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: universal-binary
+          path: timemachine_exporter
+          retention-days: 5
