@@ -9,11 +9,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build
-        run: make all
+        run: make dist
 
       - name: Archive
         uses: actions/upload-artifact@v3
         with:
-          name: universal-binary
-          path: timemachine_exporter
+          name: dist
+          path: dist
           retention-days: 5
