@@ -17,27 +17,35 @@ all:: vet timemachine_exporter
 vet:
 	go vet
 
-timemachine_exporter-darwin-arm64: vet
-	GOOS=darwin GOARCH=arm64 go build -o ./timemachine_exporter-darwin-arm64 main.go
+build/timemachine_exporter-darwin-arm64: vet
+	mkdir -p build
+	GOOS=darwin GOARCH=arm64 go build -o ./build/timemachine_exporter-darwin-arm64 main.go
 
-timemachine_exporter-darwin-amd64: vet
-	GOOS=darwin GOARCH=amd64 go build -o ./timemachine_exporter-darwin-amd64 main.go
+build/timemachine_exporter-darwin-amd64: vet
+	mkdir -p build
+	GOOS=darwin GOARCH=amd64 go build -o ./build/timemachine_exporter-darwin-amd64 main.go
 
 LIPO := $(shell command -v lipo 2> /dev/null)
 
-timemachine_exporter: timemachine_exporter-darwin-arm64 timemachine_exporter-darwin-amd64
+build/timemachine_exporter: build/timemachine_exporter-darwin-arm64 build/timemachine_exporter-darwin-amd64
 ifndef LIPO
 	$(warning "lipo is not available")
 	$(warning "install apple developer tools in order to build an universal binary")
 else
-	lipo -create -output timemachine_exporter timemachine_exporter-darwin-amd64 timemachine_exporter-darwin-arm64
-	chmod +x timemachine_exporter
+	lipo -create -output ./build/timemachine_exporter ./build/timemachine_exporter-darwin-amd64 ./build/timemachine_exporter-darwin-arm64
+	chmod +x ./build/timemachine_exporter
 endif
 
 clean:
-	rm -rf timemachine_exporter timemachine_exporter-* dist
+	rm -rf build dist
 
-dist: timemachine_exporter
+VERSION := $(shell git describe --tags --always)
+
+build: build/timemachine_exporter
+	mkdir -p build/timemachine_exporter-${VERSION}
+	cp LICENSE.txt build/timemachine_exporter build/timemachine_exporter-${VERSION}
+
+dist: build
 	mkdir -p dist
-	cp timemachine_exporter dist/
+	tar --uid 0 --gid 0 --numeric-owner -czf dist/timemachine_exporter-${VERSION}.tar.gz -C build timemachine_exporter-${VERSION}
 	(cd dist && shasum -a 256 timemachine_exporter > sha256sums.txt)
