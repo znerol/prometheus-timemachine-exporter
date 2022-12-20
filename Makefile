@@ -17,13 +17,22 @@ all:: vet timemachine_exporter
 vet:
 	go vet
 
+VERSION := $(shell git describe --tags --always)
+BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+BUILD_USER := $(shell whoami)@$(shell hostname -f)
+BUILD_DATE := $(shell date -u "+%Y%M%d-%H:%M:%S")
+LDFLAGS := -X github.com/prometheus/common/version.Version=${VERSION} \
+	-X github.com/prometheus/common/version.BuildUser=${BUILD_USER} \
+	-X github.com/prometheus/common/version.BuildDate=${BUILD_DATE} \
+	-X github.com/prometheus/common/version.Branch=${BRANCH} \
+
 build/timemachine_exporter-darwin-arm64: vet
 	mkdir -p build
-	GOOS=darwin GOARCH=arm64 go build -o ./build/timemachine_exporter-darwin-arm64 main.go
+	GOOS=darwin GOARCH=arm64 go build -ldflags "${LDFLAGS}" -o ./build/timemachine_exporter-darwin-arm64 main.go
 
 build/timemachine_exporter-darwin-amd64: vet
 	mkdir -p build
-	GOOS=darwin GOARCH=amd64 go build -o ./build/timemachine_exporter-darwin-amd64 main.go
+	GOOS=darwin GOARCH=amd64 go build -ldflags "${LDFLAGS}" -o ./build/timemachine_exporter-darwin-amd64 main.go
 
 LIPO := $(shell command -v lipo 2> /dev/null)
 
@@ -38,8 +47,6 @@ endif
 
 clean:
 	rm -rf build dist
-
-VERSION := $(shell git describe --tags --always)
 
 build: build/timemachine_exporter
 	mkdir -p build/timemachine_exporter-${VERSION}
