@@ -48,4 +48,4 @@ build: build/timemachine_exporter
 dist: build
 	mkdir -p dist
 	tar --uid 0 --gid 0 --numeric-owner -czf dist/timemachine_exporter-${VERSION}.tar.gz -C build timemachine_exporter-${VERSION}
-	(cd dist && shasum -a 256 timemachine_exporter > sha256sums.txt)
+	(cd dist && shasum -a 256 timemachine_exporter-* > sha256sums.txt)
