@@ -35,24 +35,24 @@ make all
 Here's an example of the metrics exported.
 
 ```
-# HELP timemachine_exporter_build_info A metric with a constant '1' value labeled by version, revision, branch, goversion from which timemachine_exporter was built, and the goos and goarch for the build.
-# TYPE timemachine_exporter_build_info gauge
-timemachine_exporter_build_info{branch="",goarch="amd64",goos="darwin",goversion="go1.19.3",revision="unknown",version=""} 1
-# HELP timemachine_latestbackup_age_seconds Seconds since the last successful Apple Time Machine Backup
-# TYPE timemachine_latestbackup_age_seconds gauge
-timemachine_latestbackup_age_seconds 298.016831
-# HELP timemachine_latestbackup_errors_total Current total errors occured while attempting to determine Apple Time Machine Backup status
-# TYPE timemachine_latestbackup_errors_total counter
-timemachine_latestbackup_errors_total 0
+swift build -c release --arch arm64 --arch x86_64
+# HELP timemachine_destination_avail_bytes Filesystem size in bytes on current destination
+# TYPE timemachine_destination_avail_bytes gauge
+timemachine_destination_avail_bytes 1571991666688
+# HELP timemachine_destination_latest_age_seconds Seconds since the last successful Apple Time Machine Backup to current destination
+# TYPE timemachine_destination_latest_age_seconds gauge
+timemachine_destination_latest_age_seconds 657.5939079523087
+# HELP timemachine_destination_info Apple Time Machine Backup current destination info
+# TYPE timemachine_destination_info gauge
+timemachine_destination_info 0
+timemachine_destination_info{volume="TimeMachine", network="true", id="8CC5AF2D-7A6D-4168-A48D-B3D1C28B03D1"} 1
+# HELP timemachine_destination_earliest_age_seconds Seconds since the earliest successful Apple Time Machine Backup to current destination
+# TYPE timemachine_destination_earliest_age_seconds gauge
+timemachine_destination_earliest_age_seconds 42320198.59390795
+# HELP timemachine_destination_size_bytes Filesystem space available to Apple Time Machine Backups in bytes on current destination
+# TYPE timemachine_destination_size_bytes gauge
+timemachine_destination_size_bytes 9500087140352
 ```
-
-### TLS and basic authentication
-
-The Apple Time Machine Exporter supports TLS and basic authentication.
-
-To use TLS and/or basic authentication, you need to pass a configuration file
-using the `--web.config.file` parameter. The format of the file is described
-[in the exporter-toolkit repository](https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md).
 
 ## License
 
