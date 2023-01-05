@@ -29,6 +29,7 @@ struct TimeMachineStatus {
     }
 
     public func currentDestination() -> TMDestination? {
+        tmSettings.readDestinations()
         return tmSettings.currentDestination()
     }
 }
