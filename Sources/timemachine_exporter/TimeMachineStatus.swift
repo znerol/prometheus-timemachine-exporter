@@ -13,6 +13,7 @@ import Foundation
 
 @objc protocol AppleTMSettings {
     static func sharedSettings() -> AppleTMSettings
+    func readDestinations()
     func currentDestination() -> TMDestination?
 }
 
