@@ -13,6 +13,7 @@ import Foundation
 
 @objc protocol AppleTMSettings {
     static func sharedSettings() -> AppleTMSettings
+    func readDestinations()
     func currentDestination() -> TMDestination?
 }
 
@@ -29,6 +30,7 @@ struct TimeMachineStatus {
     }
 
     public func currentDestination() -> TMDestination? {
+        tmSettings.readDestinations()
         return tmSettings.currentDestination()
     }
 }
